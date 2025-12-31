@@ -9,6 +9,8 @@ A simple web server built with Node.js and Express.
 - Environment configuration
 - Basic routing
 - Error handling
+- SQLite database integration
+- User model and API endpoints
 
 ## Getting Started
 
@@ -45,7 +47,12 @@ npm run dev
 
 - `GET /` - Welcome message
 - `GET /api/health` - Health check
-- [GET /api/users](file:///d:/projectTest/demo-server/server.js#L22-L26) - Sample user data
+- [GET /api/users](file:///d:/projectTest/demo-server/server.js#L31-L35) - Get all users
+- `POST /api/users` - Create a new user (requires name and email)
+
+## Database
+
+This project uses SQLite as its database with Sequelize as the ORM. The database file is stored as `database.sqlite` in the root directory.
 
 ## Project Structure
 
@@ -56,8 +63,15 @@ demo-server/
 ├── .env              # Environment variables
 ├── .gitignore        # Git ignore rules
 ├── README.md         # Project documentation
-└── routes/           # API route handlers (to be added)
-    └── index.js
+├── config/           # Configuration files
+│   └── database.js   # Database configuration
+├── models/           # Database models
+│   ├── index.js      # Models index
+│   └── User.js       # User model
+├── routes/           # API route handlers
+│   └── index.js      # Route definitions
+└── tests/            # Test files
+    └── server.test.js # Server tests
 ```
 
 ## License
