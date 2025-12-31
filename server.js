@@ -50,6 +50,8 @@ app.post('/api/users', async (req, res) => {
     if (!name || !email || !password) {
       return res.status(400).json({ error: 'Name, email and password are required' });
     }
+
+    console.log ('Received user data:', { name, email, password });
     
     const newUser = await User.create({ name, email, password });
     // 返回结果时排除密码字段
