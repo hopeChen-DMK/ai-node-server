@@ -1,0 +1,29 @@
+{
+  "name": "nodejs-web-server-demo",
+  "version": "1.0.0",
+  "description": "A simple web server built with Node.js",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "test": "jest"
+  },
+  "keywords": [
+    "nodejs",
+    "web-server",
+    "express",
+    "demo"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20",
+    "jest": "^29.3.1",
+    "supertest": "^6.3.3"
+  }
+}
