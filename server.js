@@ -30,7 +30,10 @@ app.get('/api/health', (req, res) => {
 app.get('/api/users', async (req, res) => {
   try {
     const { User } = require('./models');
-    const users = await User.findAll();
+    // 从结果中排除密码字段
+    const users = await User.findAll({
+      attributes: { exclude: ['password'] }
+    });
     res.json(users);
   } catch (error) {
     console.error('Error fetching users:', error);
@@ -42,17 +45,50 @@ app.get('/api/users', async (req, res) => {
 app.post('/api/users', async (req, res) => {
   try {
     const { User } = require('./models');
-    const { name, email } = req.body;
+    const { name, email, password } = req.body;
     
-    if (!name || !email) {
-      return res.status(400).json({ error: 'Name and email are required' });
+    if (!name || !email || !password) {
+      return res.status(400).json({ error: 'Name, email and password are required' });
     }
     
-    const newUser = await User.create({ name, email });
-    res.status(201).json(newUser);
+    const newUser = await User.create({ name, email, password });
+    // 返回结果时排除密码字段
+    const { password: userPassword, ...userWithoutPassword } = newUser.toJSON();
+    res.status(201).json(userWithoutPassword);
   } catch (error) {
     console.error('Error creating user:', error);
     res.status(500).json({ error: 'Failed to create user' });
+  }
+});
+
+// API route to login user (for testing password validation)
+app.post('/api/users/login', async (req, res) => {
+  try {
+    const { User } = require('./models');
+    const { email, password } = req.body;
+    
+    if (!email || !password) {
+      return res.status(400).json({ error: 'Email and password are required' });
+    }
+    
+    // 查找用户
+    const user = await User.findOne({ where: { email } });
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    
+    // 验证密码
+    const isValidPassword = await user.validatePassword(password);
+    if (!isValidPassword) {
+      return res.status(401).json({ error: 'Invalid password' });
+    }
+    
+    // 返回结果时排除密码字段
+    const { password: userPassword, ...userWithoutPassword } = user.toJSON();
+    res.status(200).json({ message: 'Login successful', user: userWithoutPassword });
+  } catch (error) {
+    console.error('Error during login:', error);
+    res.status(500).json({ error: 'Login failed' });
   }
 });
 

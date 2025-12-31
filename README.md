@@ -11,6 +11,7 @@ A simple web server built with Node.js and Express.
 - Error handling
 - SQLite database integration
 - User model and API endpoints
+- Password encryption using bcrypt
 
 ## Getting Started
 
@@ -47,12 +48,24 @@ npm run dev
 
 - `GET /` - Welcome message
 - `GET /api/health` - Health check
-- [GET /api/users](file:///d:/projectTest/demo-server/server.js#L31-L35) - Get all users
-- `POST /api/users` - Create a new user (requires name and email)
+- [GET /api/users](file:///d:/projectTest/demo-server/server.js#L32-L37) - Get all users (without passwords)
+- `POST /api/users` - Create a new user (requires name, email and password)
+- `POST /api/users/login` - Login a user (requires email and password)
 
 ## Database
 
 This project uses SQLite as its database with Sequelize as the ORM. The database file is stored as `database.sqlite` in the root directory.
+
+The User model includes:
+- id: Unique identifier
+- name: User's name
+- email: User's email address (unique)
+- password: Encrypted password
+- createdAt/updatedAt: Timestamps
+
+## Password Encryption
+
+Passwords are encrypted using bcryptjs before being stored in the database. The encryption happens automatically when creating or updating users.
 
 ## Project Structure
 
@@ -67,7 +80,7 @@ demo-server/
 │   └── database.js   # Database configuration
 ├── models/           # Database models
 │   ├── index.js      # Models index
-│   └── User.js       # User model
+│   └── User.js       # User model with password encryption
 ├── routes/           # API route handlers
 │   └── index.js      # Route definitions
 └── tests/            # Test files
